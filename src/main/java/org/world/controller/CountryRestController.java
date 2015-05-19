@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.world.dao.CountryDao;
 import org.world.dao.CountryDaoImpl;
 import org.world.model.CountryDto;
+import org.world.model.CountryLn;
 import org.world.model.Status;
 
 // TODO: Auto-generated Javadoc
@@ -21,7 +22,7 @@ import org.world.model.Status;
  * The Class CountryRestController.
  */
 @Controller
-@RequestMapping("/country_")
+@RequestMapping("/countries")
 public class CountryRestController {
 
 	@Autowired
@@ -48,59 +49,14 @@ public class CountryRestController {
 		}
 
 	}
-
-	/**
-	 * Gets the countryDto.
-	 *
-	 * @param code
-	 *            the code
-	 * @return the countryDto
-	 */
-	@RequestMapping(value = "/{code}", method = RequestMethod.GET)
-	public @ResponseBody CountryDto getCountry(@PathVariable("code") String code) {
-		CountryDto countryDto = null;
+	
+	@RequestMapping(value = "/add_translation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Status addTranslation(@RequestBody CountryLn countryLn) {
 		try {
-			// countryDto = countryDtoServices.getEntityByCode(code);
-
+			countryDao.addTranslation(countryLn);
+			return new Status(1, "Translation added Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		return countryDto;
-	}
-
-	/**
-	 * Gets the countryDto.
-	 *
-	 * @return the countryDto
-	 */
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public @ResponseBody List<CountryDto> getCountry() {
-
-		List<CountryDto> countryDtoList = null;
-		try {
-			// countryDtoList = countryDtoServices.getEntityList();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return countryDtoList;
-	}
-
-	/**
-	 * Delete countryDto.
-	 *
-	 * @param code
-	 *            the code
-	 * @return the status
-	 */
-	@RequestMapping(value = "delete/{code}", method = RequestMethod.GET)
-	public @ResponseBody Status deleteCountry(@PathVariable("code") String code) {
-
-		try {
-			// countryDtoServices.deleteEntity(code);
-			return new Status(1, "Country deleted Successfully !");
-		} catch (Exception e) {
 			return new Status(0, e.toString());
 		}
 

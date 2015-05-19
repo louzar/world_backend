@@ -1,5 +1,6 @@
 package org.world.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -47,7 +48,21 @@ public class CountryDaoImpl implements CountryDao{
 		tx.commit();
 		session.close();
 
-		return false;
+		return true;
+	}
+
+
+	@Override
+	public void addTranslation(CountryLn countryLn) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Country country = (Country) session.get(Country.class, countryLn.getCountry().getId());
+		country.setModificationDate(new Date());
+		session.save(country);
+		session.save(countryLn);
+		tx.commit();
+		session.close();
+		
 	}
 
 	
