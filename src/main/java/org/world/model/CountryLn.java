@@ -49,8 +49,7 @@ public class CountryLn implements Serializable {
         this.id = id;
     }
 
-    public CountryLn(Integer id, String name) {
-        this.id = id;
+    public CountryLn(String name) {
         this.name = name;
     }
 
@@ -107,8 +106,9 @@ public class CountryLn implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "com.sales.CountryLn[ id=" + id + " ]";
-    }
+	public String toString() {
+		return "CountryLn [id=" + id + ", name=" + name + ", country="
+				+ country + ", language=" + language + "]";
+	}
     
 }

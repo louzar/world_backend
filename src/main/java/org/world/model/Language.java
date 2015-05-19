@@ -33,8 +33,10 @@ public class Language implements Serializable {
     @Basic(optional = false)
     @Column(name = "name", nullable = false, length = 32)
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "language")
-    private List<CountryLn> countryLnList;
+    @Basic(optional = false)
+    @Column(name = "code", nullable = false, length = 4)
+    private String code;
+
 
     public Language() {
     }
@@ -62,14 +64,6 @@ public class Language implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<CountryLn> getCountryLnList() {
-        return countryLnList;
-    }
-
-    public void setCountryLnList(List<CountryLn> countryLnList) {
-        this.countryLnList = countryLnList;
     }
 
     @Override

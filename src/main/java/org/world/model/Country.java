@@ -59,10 +59,10 @@ public class Country implements Serializable {
     private List<CountryLn> countryLnList;
     @JoinColumn(name = "created_by", referencedColumnName = "username", nullable = false)
     @OneToOne(optional = false)
-    private Users users;
+    private Users createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "username", nullable = false)
     @OneToOne(optional = false)
-    private Users users1;
+    private Users modifiedBy;
 
     public Country() {
     }
@@ -71,13 +71,11 @@ public class Country implements Serializable {
         this.id = id;
     }
 
-    public Country(Integer id, String code, long populationCount, String capitalName, Date creationDate, Date modificationDate) {
-        this.id = id;
+    public Country(String code, long populationCount, String capitalName) {
         this.code = code;
         this.populationCount = populationCount;
         this.capitalName = capitalName;
-        this.creationDate = creationDate;
-        this.modificationDate = modificationDate;
+
     }
 
     public Integer getId() {
@@ -137,19 +135,19 @@ public class Country implements Serializable {
     }
 
     public Users getUsers() {
-        return users;
+        return createdBy;
     }
 
     public void setUsers(Users users) {
-        this.users = users;
+        this.createdBy = users;
     }
 
     public Users getUsers1() {
-        return users1;
+        return modifiedBy;
     }
 
     public void setUsers1(Users users1) {
-        this.users1 = users1;
+        this.modifiedBy = users1;
     }
 
     @Override
@@ -173,8 +171,13 @@ public class Country implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "com.sales.Country[ id=" + id + " ]";
-    }
+	public String toString() {
+		return "Country [id=" + id + ", code=" + code + ", populationCount="
+				+ populationCount + ", capitalName=" + capitalName
+				+ ", creationDate=" + creationDate + ", modificationDate="
+				+ modificationDate + ", countryLnList=" + countryLnList
+				+ ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy
+				+ "]";
+	}
     
 }
