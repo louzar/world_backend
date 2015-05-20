@@ -55,8 +55,7 @@ public class Country implements Serializable {
     @Column(name = "modification_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modificationDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country" , fetch= FetchType.EAGER)
-    private List<CountryLn> countryLnList;
+
     @JoinColumn(name = "created_by", referencedColumnName = "username", nullable = false)
     @OneToOne(optional = false)
     private Users createdBy;
@@ -126,31 +125,23 @@ public class Country implements Serializable {
         this.modificationDate = modificationDate;
     }
 
-    public List<CountryLn> getCountryLnList() {
-        return countryLnList;
-    }
+    public Users getCreatedBy() {
+		return createdBy;
+	}
 
-    public void setCountryLnList(List<CountryLn> countryLnList) {
-        this.countryLnList = countryLnList;
-    }
+	public void setCreatedBy(Users createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    public Users getUsers() {
-        return createdBy;
-    }
+	public Users getModifiedBy() {
+		return modifiedBy;
+	}
 
-    public void setUsers(Users users) {
-        this.createdBy = users;
-    }
+	public void setModifiedBy(Users modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
 
-    public Users getUsers1() {
-        return modifiedBy;
-    }
-
-    public void setUsers1(Users users1) {
-        this.modifiedBy = users1;
-    }
-
-    @Override
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
@@ -175,7 +166,7 @@ public class Country implements Serializable {
 		return "Country [id=" + id + ", code=" + code + ", populationCount="
 				+ populationCount + ", capitalName=" + capitalName
 				+ ", creationDate=" + creationDate + ", modificationDate="
-				+ modificationDate + ", countryLnList=" + countryLnList
+				+ modificationDate 
 				+ ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy
 				+ "]";
 	}

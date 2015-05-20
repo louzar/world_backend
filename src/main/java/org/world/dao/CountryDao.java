@@ -8,5 +8,7 @@ public interface CountryDao {
 	public boolean addEntity(CountryDto countryDto) throws Exception ;
 
 	public void addTranslation(CountryLn countryLn);
+
+	public CountryDto getEntity(CountryDto countryDto);
 	
 }

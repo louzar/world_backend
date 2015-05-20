@@ -1,18 +1,14 @@
 package org.world.controller;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.world.dao.CountryDao;
-import org.world.dao.CountryDaoImpl;
 import org.world.model.CountryDto;
 import org.world.model.CountryLn;
 import org.world.model.Status;
@@ -22,7 +18,7 @@ import org.world.model.Status;
  * The Class CountryRestController.
  */
 @Controller
-@RequestMapping("/countries")
+@RequestMapping("/api/rest/countries")
 public class CountryRestController {
 
 	@Autowired
@@ -31,13 +27,21 @@ public class CountryRestController {
 	/** The Constant logger. */
 	static final Logger logger = Logger.getLogger(CountryRestController.class);
 
-	/**
-	 * Adds the countryDto.
-	 *
-	 * @param countryDto
-	 *            the countryDto
-	 * @return the status
-	 */
+
+	@RequestMapping(value = "/get", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody CountryDto getCountries(@RequestBody CountryDto countryDto) {
+		try {
+			countryDto =  countryDao.getEntity(countryDto);
+			return countryDto;
+		} catch (Exception e) {			
+			e.printStackTrace();
+			return null;
+		}
+		
+
+	}
+	
+	
 	@RequestMapping(value = "/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Status addCountry(@RequestBody CountryDto countryDto) {
 		try {

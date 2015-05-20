@@ -2,10 +2,8 @@
 package org.world.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,8 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -37,6 +33,9 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
+    @JoinColumn(name = "language_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private Language language;
 
 
 	public Users() {
@@ -102,5 +101,13 @@ public class Users implements Serializable {
     public String toString() {
         return "com.sales.Users[ username=" + username + " ]";
     }
+
+	public Language getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
     
 }

@@ -12,9 +12,9 @@ import org.world.model.Country;
 import org.world.model.CountryDto;
 import org.world.model.CountryLn;
 import org.world.model.Language;
+import org.world.model.Users;
 
-
-public class CountryDaoImpl implements CountryDao{
+public class CountryDaoImpl implements CountryDao {
 
 	/** The session factory. */
 	@Autowired
@@ -22,25 +22,34 @@ public class CountryDaoImpl implements CountryDao{
 
 	/** The session. */
 	Session session = null;
-	
+
 	/** The tx. */
 	Transaction tx = null;
-
 
 	public boolean addEntity(CountryDto countryDto) throws Exception {
 
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
+		// TODO: change it with logged user
+		Query userquery = session
+				.createQuery("from Users where username = :username ");
+		userquery.setParameter("username", "user");
+		Users user = (Users) userquery.list().get(0);
+
 		Query query = session.createQuery("from Language where code = :code ");
-		System.out.println("countryDto.getLanguageName() " + countryDto.getLanguageName());
-		query.setParameter("code", countryDto.getLanguageName());
+		query.setParameter("code", countryDto.getLanguageCode());
 		List<Language> list = query.list();
 		Language language = null;
-		if(list.size() > 0){
-			 language = list.get(0);
-		}	
-		Country country = countryDto.getCountry();
-		CountryLn countryLn = countryDto.getCountryLn();
+		if (list.size() > 0) {
+			language = list.get(0);
+		}
+		Country country = countryDto.buildCountry();
+		Date date = new Date();
+		country.setCreationDate(date);
+		country.setModificationDate(date);
+		country.setCreatedBy(user);
+		country.setModifiedBy(user);
+		CountryLn countryLn = countryDto.buildCountryLn();
 		session.save(country);
 		countryLn.setCountry(country);
 		countryLn.setLanguage(language);
@@ -51,20 +60,57 @@ public class CountryDaoImpl implements CountryDao{
 		return true;
 	}
 
-
 	@Override
 	public void addTranslation(CountryLn countryLn) {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
+		// TODO: change it with logged user
+		Query userquery = session
+				.createQuery("from Users where username = :username ");
+		userquery.setParameter("username", "user");
+		Users user = (Users) userquery.list().get(0);
+
 		Country country = (Country) session.get(Country.class, countryLn.getCountry().getId());
 		country.setModificationDate(new Date());
-		session.save(country);
+		country.setModifiedBy(user);
+		session.update(country);
 		session.save(countryLn);
 		tx.commit();
 		session.close();
-		
+
 	}
 
-	
+	@Override
+	public CountryDto getEntity(CountryDto countryDto) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		// TODO: change it with logged user
+		Query userquery = session
+				.createQuery("from Users where username = :username ");
+		userquery.setParameter("username", "user");
+		Users user = (Users) userquery.list().get(0);
+
+		Query countryquery = session.createQuery("from Country where code = :code ");
+		countryquery.setParameter("code", countryDto.getCode());
+		Country country = (Country) countryquery.list().get(0);
+		List<CountryLn> countrylns;
+		if (countryDto.getLanguageCode() != null && countryDto.getLanguageCode().equals("all")) {
+			Query translationQuery = session.createQuery("from CountryLn where country = :country");
+			translationQuery.setParameter("country", country);
+			countrylns = translationQuery.list();
+		} else {
+
+			Query translationQuery = session.createQuery("from CountryLn where language = :language And country = :country");
+			translationQuery.setParameter("language", user.getLanguage());
+			translationQuery.setParameter("country", country);
+			countrylns = translationQuery.list();
+
+		}
+		countryDto = new CountryDto(country, countrylns );
+		tx.commit();
+		session.close();
+		return countryDto;
+
+	}
 
 }
