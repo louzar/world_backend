@@ -8,6 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.world.model.Country;
 import org.world.model.CountryDto;
 import org.world.model.CountryLn;
@@ -26,16 +28,12 @@ public class CountryDaoImpl implements CountryDao {
 	/** The tx. */
 	Transaction tx = null;
 
+	
 	public boolean addEntity(CountryDto countryDto) throws Exception {
 
 		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
-		// TODO: change it with logged user
-		Query userquery = session
-				.createQuery("from Users where username = :username ");
-		userquery.setParameter("username", "user");
-		Users user = (Users) userquery.list().get(0);
-
+		tx = session.beginTransaction();	
+        Users user = getCurrentUser();
 		Query query = session.createQuery("from Language where code = :code ");
 		query.setParameter("code", countryDto.getLanguageCode());
 		List<Language> list = query.list();
@@ -64,12 +62,7 @@ public class CountryDaoImpl implements CountryDao {
 	public void addTranslation(CountryLn countryLn) {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		// TODO: change it with logged user
-		Query userquery = session
-				.createQuery("from Users where username = :username ");
-		userquery.setParameter("username", "user");
-		Users user = (Users) userquery.list().get(0);
-
+		Users user = getCurrentUser();
 		Country country = (Country) session.get(Country.class, countryLn.getCountry().getId());
 		country.setModificationDate(new Date());
 		country.setModifiedBy(user);
@@ -84,12 +77,7 @@ public class CountryDaoImpl implements CountryDao {
 	public CountryDto getEntity(CountryDto countryDto) {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		// TODO: change it with logged user
-		Query userquery = session
-				.createQuery("from Users where username = :username ");
-		userquery.setParameter("username", "user");
-		Users user = (Users) userquery.list().get(0);
-
+		Users user = getCurrentUser();
 		Query countryquery = session.createQuery("from Country where code = :code ");
 		countryquery.setParameter("code", countryDto.getCode());
 		Country country = (Country) countryquery.list().get(0);
@@ -111,6 +99,12 @@ public class CountryDaoImpl implements CountryDao {
 		session.close();
 		return countryDto;
 
+	}
+	private Users getCurrentUser(){
+		User loggedUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Query userquery = session.createQuery("from Users where username = :username ");
+		userquery.setParameter("username",loggedUser.getUsername());
+		return(Users) userquery.list().get(0);
 	}
 
 }
