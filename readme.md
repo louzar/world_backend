@@ -1,6 +1,6 @@
 Create Country
  
-curl -i -X POST -H "Content-Type:application/json" -d '{  "code" : "tn",  "populationCount" : 12000 ,  "capitalName" : "Tunis" ,  "countryName" : "Tunisia" ,  "languageCode" : "en"   }' http://localhost:8080//api/rest/countries/save
+curl -i -X POST -H "Content-Type:application/json" -d '{  "code" : "tn",  "populationCount" : 12000 ,  "capitalName" : "Tunis" ,  "countryName" : "Tunisia" ,  "languageCode" : "en"   }' http://localhost:8080/api/rest/countries/save
 
 Add Translation
  curl -i -X POST -H "Content-Type:application/json" -d '{"name": "Tunisie","country":{"id":1}, "language":{"id":2}}' http://localhost:8080/api/rest/countries/add_translation
