@@ -6,9 +6,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -21,22 +20,24 @@ import javax.persistence.Table;
  * @author louzar
  */
 @Entity
+@IdClass(CountryLn.class)
 @Table(name = "country_ln")
 @NamedQueries({
     @NamedQuery(name = "CountryLn.findAll", query = "SELECT c FROM CountryLn c")})
 public class CountryLn implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    
     @Basic(optional = false)
     @Column(name = "name", nullable = false, length = 32)
     private String name;
+    @Basic(optional = false)
+    @Column(name = "capital_name", nullable = false, length = 32)
+    private String capitakName;
+    @Id
     @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Country country;
+    @Id
     @JoinColumn(name = "language_id", referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false)
     private Language language;
@@ -44,20 +45,11 @@ public class CountryLn implements Serializable {
     public CountryLn() {
     }
 
-    public CountryLn(Integer id) {
-        this.id = id;
-    }
 
-    public CountryLn(String name) {
+
+    public CountryLn(String name, String capitalName) {
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        this.capitakName = capitalName;
     }
 
     public String getName() {
@@ -84,29 +76,13 @@ public class CountryLn implements Serializable {
         this.language = language;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
+   
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CountryLn)) {
-            return false;
-        }
-        CountryLn other = (CountryLn) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
+
 
     @Override
 	public String toString() {
-		return "CountryLn [id=" + id + ", name=" + name + ", country="
+		return "CountryLn [name=" + name + ", country="
 				+ country + ", language=" + language + "]";
 	}
     

@@ -3,20 +3,16 @@ package org.world.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -45,9 +41,6 @@ public class Country implements Serializable {
     @Column(name = "population_count", nullable = false)
     private long populationCount;
     @Basic(optional = false)
-    @Column(name = "capital_name", nullable = false, length = 32)
-    private String capitalName;
-    @Basic(optional = false)
     @Column(name = "creation_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
@@ -56,10 +49,10 @@ public class Country implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modificationDate;
 
-    @JoinColumn(name = "created_by", referencedColumnName = "username", nullable = false)
+    @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false)
     private Users createdBy;
-    @JoinColumn(name = "modified_by", referencedColumnName = "username", nullable = false)
+    @JoinColumn(name = "modified_by", referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false)
     private Users modifiedBy;
 
@@ -70,10 +63,9 @@ public class Country implements Serializable {
         this.id = id;
     }
 
-    public Country(String code, long populationCount, String capitalName) {
+    public Country(String code, long populationCount) {
         this.code = code;
         this.populationCount = populationCount;
-        this.capitalName = capitalName;
 
     }
 
@@ -101,13 +93,6 @@ public class Country implements Serializable {
         this.populationCount = populationCount;
     }
 
-    public String getCapitalName() {
-        return capitalName;
-    }
-
-    public void setCapitalName(String capitalName) {
-        this.capitalName = capitalName;
-    }
 
     public Date getCreationDate() {
         return creationDate;
@@ -164,7 +149,7 @@ public class Country implements Serializable {
     @Override
 	public String toString() {
 		return "Country [id=" + id + ", code=" + code + ", populationCount="
-				+ populationCount + ", capitalName=" + capitalName
+				+ populationCount 
 				+ ", creationDate=" + creationDate + ", modificationDate="
 				+ modificationDate 
 				+ ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy

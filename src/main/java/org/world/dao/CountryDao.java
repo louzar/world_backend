@@ -9,6 +9,6 @@ public interface CountryDao {
 
 	public void addTranslation(CountryLn countryLn);
 
-	public CountryDto getEntity(CountryDto countryDto);
+	public CountryDto getEntity(String code);
 	
 }

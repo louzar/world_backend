@@ -3,40 +3,34 @@ package org.world.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.transaction.annotation.Transactional;
 import org.world.model.Country;
 import org.world.model.CountryDto;
 import org.world.model.CountryLn;
 import org.world.model.Language;
 import org.world.model.Users;
 
+@Transactional
 public class CountryDaoImpl implements CountryDao {
 
-	/** The session factory. */
-	@Autowired
-	SessionFactory sessionFactory;
-
-	/** The session. */
-	Session session = null;
-
-	/** The tx. */
-	Transaction tx = null;
+	@PersistenceContext
+	EntityManager entityManager;
 
 	
 	public boolean addEntity(CountryDto countryDto) throws Exception {
 
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();	
+	
         Users user = getCurrentUser();
-		Query query = session.createQuery("from Language where code = :code ");
+        
+		 Query query = entityManager.createQuery("from Language where code = :code ");
 		query.setParameter("code", countryDto.getLanguageCode());
-		List<Language> list = query.list();
+		List<Language> list = query.getResultList();
 		Language language = null;
 		if (list.size() > 0) {
 			language = list.get(0);
@@ -48,63 +42,58 @@ public class CountryDaoImpl implements CountryDao {
 		country.setCreatedBy(user);
 		country.setModifiedBy(user);
 		CountryLn countryLn = countryDto.buildCountryLn();
-		session.save(country);
+		entityManager.persist(country);
 		countryLn.setCountry(country);
 		countryLn.setLanguage(language);
-		session.save(countryLn);
-		tx.commit();
-		session.close();
+		entityManager.persist(countryLn);
+
 
 		return true;
 	}
 
 	@Override
 	public void addTranslation(CountryLn countryLn) {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+
 		Users user = getCurrentUser();
-		Country country = (Country) session.get(Country.class, countryLn.getCountry().getId());
+		Country country = (Country) entityManager.find(Country.class, countryLn.getCountry().getId());
 		country.setModificationDate(new Date());
 		country.setModifiedBy(user);
-		session.update(country);
-		session.save(countryLn);
-		tx.commit();
-		session.close();
+		entityManager.merge(country);
+		entityManager.persist(countryLn);
+
 
 	}
 
 	@Override
-	public CountryDto getEntity(CountryDto countryDto) {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+	public CountryDto getEntity(String code) {
+
 		Users user = getCurrentUser();
-		Query countryquery = session.createQuery("from Country where code = :code ");
-		countryquery.setParameter("code", countryDto.getCode());
-		Country country = (Country) countryquery.list().get(0);
+		Query countryquery = entityManager.createQuery("from Country where code = :code ");
+		countryquery.setParameter("code", code);
+		Country country = (Country) countryquery.getResultList().get(0);
 		List<CountryLn> countrylns;
-		if (countryDto.getLanguageCode() != null && countryDto.getLanguageCode().equals("all")) {
-			Query translationQuery = session.createQuery("from CountryLn where country = :country");
+		CountryDto countryDto =  new CountryDto();
+		if (countryDto .getLanguageCode() != null && countryDto.getLanguageCode().equals("all")) {
+			Query translationQuery = entityManager.createQuery("from CountryLn where country = :country");
 			translationQuery.setParameter("country", country);
-			countrylns = translationQuery.list();
+			countrylns = translationQuery.getResultList();
 		} else {
 
-			Query translationQuery = session.createQuery("from CountryLn where language = :language And country = :country");
+			Query translationQuery = entityManager.createQuery("from CountryLn where language = :language And country = :country");
 			translationQuery.setParameter("language", user.getLanguage());
 			translationQuery.setParameter("country", country);
-			countrylns = translationQuery.list();
+			countrylns = translationQuery.getResultList();
 
 		}
 		countryDto = new CountryDto(country, countrylns );
-		tx.commit();
-		session.close();
 		return countryDto;
 
 	}
 	private Users getCurrentUser(){
 		User loggedUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Query userquery = session.createQuery("from Users where username = :username ");
+		Query userquery = entityManager.createQuery("from Users where username = :username ");
 		userquery.setParameter("username",loggedUser.getUsername());
-		return(Users) userquery.list().get(0);
+		return(Users) userquery.getResultList().get(0);
 	}
 
 }

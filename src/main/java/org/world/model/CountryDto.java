@@ -1,10 +1,12 @@
 package org.world.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.world.util.DateFormatter;
+import org.world.util.CustomDateSerializer;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class CountryDto {
 
@@ -14,8 +16,8 @@ public class CountryDto {
     private String countryName;
     private String languageCode;
     private List<String> translations;
-    private String creationDate;
-    private String modificationDate;
+    private Date creationDate;
+    private Date modificationDate;
     private String createdBy;
     private String modifiedBy;
 
@@ -26,9 +28,8 @@ public class CountryDto {
 	public CountryDto(Country country, List<CountryLn> countrylns) {
 		code = country.getCode();
 		populationCount = country.getPopulationCount();
-		capitalName = country.getCapitalName();
-		creationDate = DateFormatter.format(country.getCreationDate());
-		modificationDate = DateFormatter.format(country.getModificationDate());
+		creationDate = country.getCreationDate();
+		modificationDate = country.getModificationDate();
 		createdBy = country.getCreatedBy().getUsername();
 		modifiedBy = country.getModifiedBy().getUsername();
 		translations = new ArrayList<String>();
@@ -38,7 +39,7 @@ public class CountryDto {
 	}
 
 	public Country buildCountry() {
-		Country country = new Country(code, populationCount, capitalName);
+		Country country = new Country(code, populationCount);
 		return country;
 	}
 
@@ -76,7 +77,7 @@ public class CountryDto {
 
 
 	public CountryLn buildCountryLn() {
-		CountryLn countryLn = new CountryLn(countryName);
+		CountryLn countryLn = new CountryLn(countryName, capitalName);
 		return countryLn;
 	}
 
@@ -103,12 +104,12 @@ public class CountryDto {
 	public void setTranslations(List<String> translations) {
 		this.translations = translations;
 	}
-
-	public String getCreationDate() {
+	@JsonSerialize(using = CustomDateSerializer.class)
+	public Date getCreationDate() {
 		return creationDate;
 	}
-
-	public String getModificationDate() {
+	@JsonSerialize(using = CustomDateSerializer.class)
+	public Date getModificationDate() {
 		return modificationDate;
 	}
 

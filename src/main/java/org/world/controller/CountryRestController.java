@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.world.dao.CountryDao;
 import org.world.model.CountryDto;
@@ -28,11 +29,14 @@ public class CountryRestController {
 	static final Logger logger = Logger.getLogger(CountryRestController.class);
 
 
+	
+
+	 
+	 
 	@RequestMapping(value = "/get", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody CountryDto getCountries(@RequestBody CountryDto countryDto) {
+	public @ResponseBody CountryDto getCountries(@RequestParam(value="code") String code, @RequestParam(value="val", defaultValue="all") String val) {
 		try {
-			countryDto =  countryDao.getEntity(countryDto);
-			return countryDto;
+			return countryDao.getEntity(code);
 		} catch (Exception e) {			
 			e.printStackTrace();
 			return null;
