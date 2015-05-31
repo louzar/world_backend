@@ -56,16 +56,19 @@ public class CountryDaoImpl implements CountryDao {
 
 		Users user = getCurrentUser();
 		Country country = (Country) entityManager.find(Country.class, countryLn.getCountry().getId());
+		Language language = (Language) entityManager.find(Language.class, countryLn.getLanguage().getId());
 		country.setModificationDate(new Date());
 		country.setModifiedBy(user);
 		entityManager.merge(country);
+		countryLn.setCountry(country);
+		countryLn.setLanguage(language);
 		entityManager.persist(countryLn);
 
 
 	}
 
 	@Override
-	public CountryDto getEntity(String code) {
+	public CountryDto getEntity(String code, boolean all) {
 
 		Users user = getCurrentUser();
 		Query countryquery = entityManager.createQuery("from Country where code = :code ");
@@ -73,7 +76,7 @@ public class CountryDaoImpl implements CountryDao {
 		Country country = (Country) countryquery.getResultList().get(0);
 		List<CountryLn> countrylns;
 		CountryDto countryDto =  new CountryDto();
-		if (countryDto .getLanguageCode() != null && countryDto.getLanguageCode().equals("all")) {
+		if (all) {
 			Query translationQuery = entityManager.createQuery("from CountryLn where country = :country");
 			translationQuery.setParameter("country", country);
 			countrylns = translationQuery.getResultList();

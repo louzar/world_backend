@@ -32,7 +32,7 @@ public class CountryLn implements Serializable {
     private String name;
     @Basic(optional = false)
     @Column(name = "capital_name", nullable = false, length = 32)
-    private String capitakName;
+    private String capitalName;
     @Id
     @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
@@ -49,7 +49,7 @@ public class CountryLn implements Serializable {
 
     public CountryLn(String name, String capitalName) {
         this.name = name;
-        this.capitakName = capitalName;
+        this.capitalName = capitalName;
     }
 
     public String getName() {
@@ -84,6 +84,18 @@ public class CountryLn implements Serializable {
 	public String toString() {
 		return "CountryLn [name=" + name + ", country="
 				+ country + ", language=" + language + "]";
+	}
+
+
+
+	public String getCapitalName() {
+		return capitalName;
+	}
+
+
+
+	public void setCapitalName(String capitalName) {
+		this.capitalName = capitalName;
 	}
     
 }

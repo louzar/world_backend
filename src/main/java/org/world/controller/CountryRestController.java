@@ -33,10 +33,11 @@ public class CountryRestController {
 
 	 
 	 
-	@RequestMapping(value = "/get", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody CountryDto getCountries(@RequestParam(value="code") String code, @RequestParam(value="val", defaultValue="all") String val) {
+	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	public @ResponseBody CountryDto getCountries(@RequestParam(value="code") String code, @RequestParam(value="val", defaultValue = "", required = false) String val) {
 		try {
-			return countryDao.getEntity(code);
+			System.out.println("val "+val);
+			return countryDao.getEntity(code, val.equals("all"));
 		} catch (Exception e) {			
 			e.printStackTrace();
 			return null;
