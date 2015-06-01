@@ -15,7 +15,7 @@ public class CountryDto {
 	private String capitalName;
     private String countryName;
     private String languageCode;
-    private List<String> translations;
+    private List<CountryLnDto> translations;
     private Date creationDate;
     private Date modificationDate;
     private String createdBy;
@@ -32,10 +32,12 @@ public class CountryDto {
 		modificationDate = country.getModificationDate();
 		createdBy = country.getCreatedBy().getUsername();
 		modifiedBy = country.getModifiedBy().getUsername();
-		translations = new ArrayList<String>();
-		for(CountryLn cl: countrylns){
-			translations.add(cl.getName());
+		translations =  new  ArrayList<CountryLnDto>();
+		for(CountryLn cln : countrylns){
+			translations.add(new CountryLnDto(cln.getName(), cln.getCapitalName()));
 		}
+		
+
 	}
 
 	public Country buildCountry() {
@@ -59,17 +61,11 @@ public class CountryDto {
 		this.populationCount = populationCount;
 	}
 
-	public String getCapitalName() {
-		return capitalName;
-	}
 
 	public void setCapitalName(String capitalName) {
 		this.capitalName = capitalName;
 	}
 
-	public String getCountryName() {
-		return countryName;
-	}
 
 	public void setCountryName(String countryName) {
 		this.countryName = countryName;
@@ -97,12 +93,12 @@ public class CountryDto {
 		this.languageCode = languageCode;
 	}
 
-	public List<String> getTranslations() {
+	public List<CountryLnDto> getTranslations() {
 		return translations;
 	}
 
-	public void setTranslations(List<String> translations) {
-		this.translations = translations;
+	public void setTranslations(List<CountryLnDto> countrylns) {
+		this.translations = countrylns;
 	}
 	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getCreationDate() {

@@ -56,6 +56,7 @@ public class Country implements Serializable {
     @OneToOne(optional = false)
     private Users modifiedBy;
 
+
     public Country() {
     }
 
@@ -154,6 +155,5 @@ public class Country implements Serializable {
 				+ modificationDate 
 				+ ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy
 				+ "]";
-	}
-    
+	} 
 }

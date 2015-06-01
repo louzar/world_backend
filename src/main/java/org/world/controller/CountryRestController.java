@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,15 +29,10 @@ public class CountryRestController {
 	/** The Constant logger. */
 	static final Logger logger = Logger.getLogger(CountryRestController.class);
 
-
-	
-
 	 
-	 
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public @ResponseBody CountryDto getCountries(@RequestParam(value="code") String code, @RequestParam(value="val", defaultValue = "", required = false) String val) {
+	@RequestMapping(value = "/get/{code}", method = RequestMethod.GET)
+	public @ResponseBody CountryDto getCountries(@PathVariable String code, @RequestParam(value = "val", defaultValue = "", required = false) String val) {
 		try {
-			System.out.println("val "+val);
 			return countryDao.getEntity(code, val.equals("all"));
 		} catch (Exception e) {			
 			e.printStackTrace();

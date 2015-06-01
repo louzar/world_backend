@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Dim 31 Mai 2015 à 17:06
+-- Généré le :  Lun 01 Juin 2015 à 13:09
 -- Version du serveur :  5.5.39
 -- Version de PHP :  5.4.31
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `country` (
   `population_count` bigint(20) NOT NULL,
   `created_by` int(11) NOT NULL,
   `modified_by` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -84,8 +84,8 @@ CREATE TABLE IF NOT EXISTS `language` (
 --
 
 INSERT INTO `language` (`id`, `code`, `name`) VALUES
-(1, 'en', 'en'),
-(2, 'fr', 'fr');
+(1, 'en', 'english'),
+(2, 'fr', 'francais');
 
 -- --------------------------------------------------------
 
@@ -150,7 +150,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `country`
 --
 ALTER TABLE `country`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `language`
 --

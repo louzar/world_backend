@@ -28,7 +28,7 @@ public class CountryDaoImpl implements CountryDao {
 	
         Users user = getCurrentUser();
         
-		 Query query = entityManager.createQuery("from Language where code = :code ");
+		Query query = entityManager.createQuery("from Language where code = :code ");
 		query.setParameter("code", countryDto.getLanguageCode());
 		List<Language> list = query.getResultList();
 		Language language = null;
@@ -88,8 +88,9 @@ public class CountryDaoImpl implements CountryDao {
 			countrylns = translationQuery.getResultList();
 
 		}
-		countryDto = new CountryDto(country, countrylns );
-		return countryDto;
+
+		 
+		return new CountryDto(country,countrylns) ;
 
 	}
 	private Users getCurrentUser(){
